@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1"
+	 id="svg373" inkscape:version="1.0beta2 (2b71d25, 2019-12-03)" sodipodi:docname="pipeline_dag.2.svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 879.6 461.9"
+	 style="enable-background:new 0 0 879.6 461.9;" xml:space="preserve">
+<style type="text/css">
+	.st0{stroke:#000000;}
+	.st1{font-family:'Times-Roman';}
+	.st2{font-size:14.005px;}
+	.st3{fill:none;stroke:#000000;}
+</style>
+<sodipodi:namedview  bordercolor="#666666" borderopacity="1" gridtolerance="10" guidetolerance="10" id="namedview375" inkscape:current-layer="svg373" inkscape:cx="796.01516" inkscape:cy="669.66667" inkscape:document-rotation="0" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-height="1005" inkscape:window-maximized="0" inkscape:window-width="1564" inkscape:window-x="0" inkscape:window-y="23" inkscape:zoom="0.82352941" objecttolerance="10" pagecolor="#ffffff" showgrid="false">
+	</sodipodi:namedview>
+<g id="node1" transform="translate(270.74416,542.18312)">
+	<title  id="title14">p0</title>
+	<circle id="ellipse16" class="st0" cx="-141.5" cy="-450.5" r="3.6"/>
+	<text id="text18" transform="matrix(1 0 0 1 -270.7442 -457.9219)" class="st1 st2">Channel.fromFilePairs</text>
+</g>
+<g id="node2" transform="translate(270.74416,542.18312)">
+	<title  id="title21">p10</title>
+	<ellipse id="ellipse23" class="st3" cx="-141.5" cy="-363.5" rx="44.4" ry="18"/>
+	<text id="text25" transform="matrix(1 0 0 1 -167.9707 -359.7871)" class="st1 st2">initial_qc</text>
+</g>
+<g id="edge1" transform="translate(270.74416,542.18312)">
+	<title  id="title28">p0-&gt;p10</title>
+	<path id="path30" inkscape:connector-curvature="0" class="st3" d="M-141.5-446.7c0,8.5,0,34.4,0,54.9"/>
+	<polygon id="polygon32" class="st0" points="-141.5,-381.7 -145,-391.7 -138,-391.7 	"/>
+	<text id="text34" transform="matrix(1 0 0 1 -143.7139 -403.3027)" class="st1 st2">raw_fastq_fastqc_reads_ch</text>
+</g>
+<g id="node13" transform="translate(270.74416,542.18312)">
+	<title  id="title37">p15</title>
+	<circle id="ellipse39" class="st3" cx="-89.5" cy="-276.5" r="3.5"/>
+	<text id="text41" transform="matrix(1 0 0 1 -130.1748 -283.7598)" class="st1 st2">collect</text>
+</g>
+<g id="edge7" transform="translate(270.74416,542.18312)">
+	<title  id="title44">p10-&gt;p15</title>
+	<path id="path46" inkscape:connector-curvature="0" class="st3" d="M-144.9-345.3c-1.1,10.1-1,22.9,4.4,32.8
+		c8.2,15.2,26.2,25.1,38.5,30.4"/>
+	<polygon id="polygon48" class="st0" points="-92.5,-278.4 -103.1,-278.8 -100.6,-285.3 	"/>
+	<text id="text50" transform="matrix(1 0 0 1 -142.1201 -316.2715)" class="st1 st2">fastqc_results_ch</text>
+</g>
+<g id="node3" transform="translate(270.74416,542.18312)">
+	<title  id="title53">p1</title>
+	<circle id="ellipse55" class="st0" cx="292.6" cy="-523.1" r="3.6"/>
+	<text id="text57" transform="matrix(1 0 0 1 163.4111 -530.5479)" class="st1 st2">Channel.fromFilePairs</text>
+</g>
+<g id="node4" transform="translate(270.74416,542.18312)">
+	<title  id="title60">p11</title>
+	<ellipse id="ellipse62" class="st3" cx="292.6" cy="-450.5" rx="75" ry="18"/>
+	<text id="text64" transform="matrix(1 0 0 1 242.8447 -446.8174)" class="st1 st2">perfom_trimming</text>
+</g>
+<g id="edge2" transform="translate(270.74416,542.18312)">
+	<title  id="title67">p1-&gt;p11</title>
+	<path id="path69" inkscape:connector-curvature="0" class="st3" d="M292.6-519.5c0,6.7,0,24.6,0,40.4"/>
+	<polygon id="polygon71" class="st0" points="292.6,-468.7 289.1,-478.7 296.1,-478.7 	"/>
+	<text id="text73" transform="matrix(1 0 0 1 291.3134 -490.333)" class="st1 st2">raw_fastq_to_trim_ch</text>
+</g>
+<g id="node14" transform="translate(270.74416,542.18312)">
+	<title  id="title76">p12</title>
+	<ellipse id="ellipse78" class="st3" cx="229.6" cy="-363.5" rx="60.4" ry="18"/>
+	<text id="text80" transform="matrix(1 0 0 1 190.3222 -359.7871)" class="st1 st2">salmon_quant</text>
+</g>
+<g id="edge8" transform="translate(270.74416,542.18312)">
+	<title  id="title83">p11-&gt;p12</title>
+	<path id="path85" inkscape:connector-curvature="0" class="st3" d="M220.6-445.5c-46.9,4.3-102,13.1-117,31
+		c-21,25.2,18.3,37.8,58.4,44.1"/>
+	<polygon id="polygon87" class="st0" points="171.9,-369 161.5,-367 162.5,-373.9 	"/>
+	<text id="text89" transform="matrix(1 0 0 1 102.6943 -403.3027)" class="st1 st2">trimmed_read1_ch</text>
+</g>
+<g id="edge9" transform="translate(270.74416,542.18312)">
+	<title  id="title92">p11-&gt;p12</title>
+	<path id="path94" inkscape:connector-curvature="0" class="st3" d="M252.8-435c-8.8,5.1-17,11.8-22.2,20.5
+		c-4,6.7-5.3,14.8-5.3,22.5"/>
+	<polygon id="polygon96" class="st0" points="225.9,-381.9 221.8,-391.6 228.8,-392.1 	"/>
+	<text id="text98" transform="matrix(1 0 0 1 229.7392 -403.3027)" class="st1 st2">trimmed_read2_ch</text>
+</g>
+<g id="edge10" transform="translate(270.74416,542.18312)">
+	<title  id="title101">p11-&gt;p12</title>
+	<path id="path103" inkscape:connector-curvature="0" class="st3" d="M319.7-433.6c12.8,9.6,23.5,22.2,14.9,34.1
+		c-9.3,12.9-23.6,21.1-38.7,26.4"/>
+	<polygon id="polygon105" class="st0" points="286,-370.1 294.6,-376.4 296.6,-369.7 	"/>
+	<text id="text107" transform="matrix(1 0 0 1 337.8369 -403.3027)" class="st1 st2">trimmed_sample_name_ch</text>
+</g>
+<g id="node15" transform="translate(270.74416,542.18312)">
+	<title  id="title110">p17</title>
+	<circle id="ellipse112" class="st3" cx="529.7" cy="-363.5" r="3.5"/>
+	<text id="text114" transform="matrix(1 0 0 1 489.0459 -370.791)" class="st1 st2">collect</text>
+</g>
+<g id="edge11" transform="translate(270.74416,542.18312)">
+	<title  id="title117">p11-&gt;p17</title>
+	<path id="path119" inkscape:connector-curvature="0" class="st3" d="M355.8-440.9c54.2,7.8,125.3,19.2,136.9,26.4
+		c14.9,9.2,25.8,26.8,31.7,38.5"/>
+	<polygon id="polygon121" class="st0" points="528.7,-366.9 521.3,-374.4 527.7,-377.4 	"/>
+	<text id="text123" transform="matrix(1 0 0 1 508.5566 -403.3027)" class="st1 st2">contamination_ch</text>
+</g>
+<g id="node21" transform="translate(270.74416,542.18312)">
+	<title  id="title210">p16</title>
+	<circle id="ellipse212" class="st3" cx="60.5" cy="-211.9" r="3.5"/>
+	<text id="text214" transform="matrix(1 0 0 1 11.0898 -219.2363)" class="st1 st2">ifEmpty</text>
+</g>
+<g id="edge18" transform="translate(270.74416,542.18312)">
+	<title  id="title217">p15-&gt;p16</title>
+	<path id="path219" inkscape:connector-curvature="0" class="st3" d="M-86.6-274.3c16.7,7,102.3,42.6,134.7,56.2"/>
+	<polygon id="polygon221" class="st0" points="57.4,-214.2 46.8,-214.9 49.5,-221.3 	"/>
+</g>
+<g id="node16" transform="translate(270.74416,542.18312)">
+	<title  id="title224">p13</title>
+	<circle id="ellipse226" class="st3" cx="-18.5" cy="-276.5" r="3.5"/>
+	<text id="text228" transform="matrix(1 0 0 1 -59.1494 -283.7598)" class="st1 st2">collect</text>
+</g>
+<g id="edge12" transform="translate(270.74416,542.18312)">
+	<title  id="title231">p12-&gt;p13</title>
+	<path id="path233" inkscape:connector-curvature="0" class="st3" d="M169.4-361.3c-62,2.5-153,10.2-177.8,33.9
+		c-9.9,9.4-11.5,25.6-11.2,37"/>
+	<polygon id="polygon235" class="st0" points="-18.9,-280.2 -23.2,-289.9 -16.2,-290.5 	"/>
+	<text id="text237" transform="matrix(1 0 0 1 -9.9668 -316.2715)" class="st1 st2">pseudoquant_ch</text>
+</g>
+<g id="node17" transform="translate(270.74416,542.18312)">
+	<title  id="title240">p23</title>
+	<ellipse id="ellipse242" class="st3" cx="186.6" cy="-276.5" rx="102.1" ry="18"/>
+	<text id="text244" transform="matrix(1 0 0 1 114.6328 -272.7559)" class="st1 st2">compress_salmon_results</text>
+</g>
+<g id="edge13" transform="translate(270.74416,542.18312)">
+	<title  id="title247">p12-&gt;p23</title>
+	<path id="path249" inkscape:connector-curvature="0" class="st3" d="M174.5-355.9c-35.2,5.4-76.1,14.6-87,28.5
+		c-12.1,15.4,1,26.4,21.2,34.2"/>
+	<polygon id="polygon251" class="st0" points="118.4,-290 107.8,-289.9 110.1,-296.5 	"/>
+	<text id="text253" transform="matrix(1 0 0 1 85.1845 -316.2715)" class="st1 st2">pseudoquant_to_compress_ch</text>
+</g>
+<g id="edge15" transform="translate(270.74416,542.18312)">
+	<title  id="title256">p12-&gt;p23</title>
+	<path id="path258" inkscape:connector-curvature="0" class="st3" d="M245-345.8c7.2,10,13,22.7,6.7,33.3
+		c-3.2,5.3-7.4,9.8-12.3,13.7"/>
+	<polygon id="polygon260" class="st0" points="230.7,-292.8 237,-301.4 241,-295.6 	"/>
+	<text id="text262" transform="matrix(1 0 0 1 253.5761 -316.2715)" class="st1 st2">pseudoquant_name</text>
+</g>
+<g id="node18" transform="translate(270.74416,542.18312)">
+	<title  id="title265">p19</title>
+	<circle id="ellipse267" class="st3" cx="356.7" cy="-276.5" r="3.5"/>
+	<text id="text269" transform="matrix(1 0 0 1 315.9843 -283.7598)" class="st1 st2">collect</text>
+</g>
+<g id="edge14" transform="translate(270.74416,542.18312)">
+	<title  id="title272">p12-&gt;p19</title>
+	<path id="path274" inkscape:connector-curvature="0" class="st3" d="M283.8-355.3c33,5.6,70.7,14.7,80.8,27.8
+		c8.5,10.9,3.5,27.3-1.6,38.3"/>
+	<polygon id="polygon276" class="st0" points="358.3,-280.1 359.9,-290.6 366.1,-287.3 	"/>
+	<text id="text278" transform="matrix(1 0 0 1 367.7236 -316.2715)" class="st1 st2">pseudoquant_log_ch</text>
+</g>
+<g id="node22" transform="translate(270.74416,542.18312)">
+	<title  id="title281">p18</title>
+	<circle id="ellipse283" class="st3" cx="504.7" cy="-236.9" r="3.5"/>
+	<text id="text285" transform="matrix(1 0 0 1 455.248 -244.2451)" class="st1 st2">ifEmpty</text>
+</g>
+<g id="edge20" transform="translate(270.74416,542.18312)">
+	<title  id="title288">p17-&gt;p18</title>
+	<path id="path290" inkscape:connector-curvature="0" class="st3" d="M529.2-359.9c-2.8,14.1-16.3,81.3-22,109.5"/>
+	<polygon id="polygon292" class="st0" points="505.2,-240.5 503.8,-251 510.6,-249.6 	"/>
+</g>
+<g id="node19" transform="translate(270.74416,542.18312)">
+	<title  id="title295">p14</title>
+	<circle id="ellipse297" class="st3" cx="251.6" cy="-211.9" r="3.5"/>
+	<text id="text299" transform="matrix(1 0 0 1 202.1572 -219.2363)" class="st1 st2">ifEmpty</text>
+</g>
+<g id="edge16" transform="translate(270.74416,542.18312)">
+	<title  id="title302">p13-&gt;p14</title>
+	<path id="path304" inkscape:connector-curvature="0" class="st3" d="M-15.1-274.7c26.8,6.2,203.6,47.1,253.5,58.7"/>
+	<polygon id="polygon306" class="st0" points="248.3,-213.7 237.7,-212.6 239.3,-219.4 	"/>
+</g>
+<g id="node23" transform="translate(270.74416,542.18312)">
+	<title  id="title309">p20</title>
+	<circle id="ellipse311" class="st3" cx="351.7" cy="-211.9" r="3.5"/>
+	<text id="text313" transform="matrix(1 0 0 1 302.1933 -219.2363)" class="st1 st2">ifEmpty</text>
+</g>
+<g id="edge22" transform="translate(270.74416,542.18312)">
+	<title  id="title316">p19-&gt;p20</title>
+	<path id="path318" inkscape:connector-curvature="0" class="st3" d="M356.4-272.8c-0.6,8-2.6,31.8-3.8,46.8"/>
+	<polygon id="polygon320" class="st0" points="351.9,-215.5 349.2,-225.8 356.1,-225.2 	"/>
+</g>
+<g id="node20" transform="translate(270.74416,542.18312)">
+	<title  id="title323">p21</title>
+	<ellipse id="ellipse325" class="st3" cx="330.6" cy="-153.4" rx="38.2" ry="18"/>
+	<text id="text327" transform="matrix(1 0 0 1 309.2509 -149.7119)" class="st1 st2">multiqc</text>
+</g>
+<g id="edge17" transform="translate(270.74416,542.18312)">
+	<title  id="title330">p14-&gt;p21</title>
+	<path id="path332" inkscape:connector-curvature="0" class="st3" d="M254.2-209.1c7.5,5.4,29.5,21.1,48,34.3"/>
+	<polygon id="polygon334" class="st0" points="310.5,-168.9 300.3,-171.8 304.4,-177.5 	"/>
+</g>
+<g id="node24" transform="translate(270.74416,542.18312)">
+	<title  id="title337">p22</title>
+	<circle id="ellipse339" class="st0" cx="330.6" cy="-82.6" r="1.8"/>
+</g>
+<g id="edge24" transform="translate(270.74416,542.18312)">
+	<title  id="title342">p21-&gt;p22</title>
+	<path id="path344" inkscape:connector-curvature="0" class="st3" d="M330.6-135.4c0,12.5,0,29.3,0,40.3"/>
+	<polygon id="polygon346" class="st0" points="330.6,-85 327.1,-95 334.1,-95 	"/>
+	<text id="text348" transform="matrix(1 0 0 1 330.1513 -106.1963)" class="st1 st2">multiqc_ch</text>
+</g>
+<g id="edge19" transform="translate(270.74416,542.18312)">
+	<title  id="title351">p16-&gt;p21</title>
+	<path id="path353" inkscape:connector-curvature="0" class="st3" d="M64-210.2c22.7,4.8,152.7,32,222.4,46.5"/>
+	<polygon id="polygon355" class="st0" points="296.2,-161.6 285.7,-160.2 287.2,-167.1 	"/>
+</g>
+<g id="edge21" transform="translate(270.74416,542.18312)">
+	<title  id="title358">p18-&gt;p21</title>
+	<path id="path360" inkscape:connector-curvature="0" class="st3" d="M502-234.7c-15.2,7.1-90.1,42.2-135.7,63.6"/>
+	<polygon id="polygon362" class="st0" points="357,-166.8 364.6,-174.2 367.6,-167.8 	"/>
+</g>
+<g id="edge23" transform="translate(270.74416,542.18312)">
+	<title  id="title365">p20-&gt;p21</title>
+	<path id="path367" inkscape:connector-curvature="0" class="st3" d="M350.8-208.5c-1.8,4.9-6.1,16.5-10.3,27.6"/>
+	<polygon id="polygon369" class="st0" points="336.9,-171.3 337.1,-181.9 343.7,-179.5 	"/>
+</g>
+</svg>
