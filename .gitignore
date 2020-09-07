@@ -1,0 +1,6 @@
+.snakemake/
+.git
+.nextflow*
+.idea*
+work/
+*.log
