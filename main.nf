@@ -163,6 +163,11 @@ process perfom_trimming {
 process salmon_quant {
     tag "salmon quant"
     // container "combinelab/salmon:1.3.0"
+    publishDir path: "${params.aligned}", mode: "copy", overwrite: true
+    publishDir path: "${params.qc}/${sample_id}", mode: "copy", pattern: "*.json", overwrite: true
+    publishDir path: "${params.qc}/${sample_id}", mode: "copy", pattern: "*.tsv", overwrite: true
+    publishDir path: "${params.qc}/${sample_id}", mode: "copy", pattern: "*.gz", overwrite: true
+    publishDir path: "${params.qc}/${sample_id}", mode: "copy", pattern: "*.txt", overwrite: true
 
     input:
         val sample_id from trimmed_sample_name_ch
@@ -182,6 +187,7 @@ process salmon_quant {
         --index ${params.salmon_index} \
         --seqBias \
         --gcBias \
+        --dumpEq \
         --validateMappings \
         --mates1 ${trimmed_read1} \
         --mates2 ${trimmed_read2} \
@@ -194,8 +200,6 @@ process multiqc {
     
     tag "multiqc"
     // container "ewels/multiqc:1.9"
-    
-    publishDir path: "${params.qc}", mode: "copy", overwrite: true
     
     input:
         val sample_id from pseudoquant_name2
