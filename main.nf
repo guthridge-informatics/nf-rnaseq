@@ -71,7 +71,7 @@ if (params.help) {
     exit 0
 }
 
-params.input = "${params.fastq}/*_S*_L00*_R{1,2}_00*.fastq.gz"
+params.input = "${params.raw_fastq}/*_S*_L00*_R{1,2}_00*.fastq.gz"
 
 Channel
     .fromFilePairs( params.reads, checkIfExists: true, flat: true )
