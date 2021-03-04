@@ -162,6 +162,8 @@ process perfom_trimming {
 
 process salmon_quant {
     tag "salmon quant"
+    maxErrors 10
+    errorStrategy "ignore"
     // container "combinelab/salmon:1.3.0"
 
     input:
