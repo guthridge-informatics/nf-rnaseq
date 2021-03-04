@@ -166,10 +166,10 @@ process salmon_quant {
     errorStrategy "ignore"
     // container "combinelab/salmon:1.3.0"
     publishDir path: "${params.aligned}", mode: "copy", overwrite: true
-    publishDir path: "${params.qc}/${sample_id}", mode: "copy", pattern: "*.json", overwrite: true
-    publishDir path: "${params.qc}/${sample_id}", mode: "copy", pattern: "*.tsv", overwrite: true
-    publishDir path: "${params.qc}/${sample_id}", mode: "copy", pattern: "*.gz", overwrite: true
-    publishDir path: "${params.qc}/${sample_id}", mode: "copy", pattern: "*.txt", overwrite: true
+    publishDir path: "${params.aligned}/${sample_id}", mode: "copy", pattern: "*.json", overwrite: true
+    publishDir path: "${params.aligned}/${sample_id}", mode: "copy", pattern: "*.tsv", overwrite: true
+    publishDir path: "${params.aligned}/${sample_id}", mode: "copy", pattern: "*.gz", overwrite: true
+    publishDir path: "${params.aligned}/${sample_id}", mode: "copy", pattern: "*.txt", overwrite: true
 
     input:
         val sample_id from trimmed_sample_name_ch
