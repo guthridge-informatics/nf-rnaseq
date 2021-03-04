@@ -101,7 +101,7 @@ process initial_qc {
     //Use Fastqc to examine fastq quality
 
     tag "FastQC"
-    container "registry.gitlab.com/milothepsychic/rnaseq_pipeline/fastqc:0.11.9"
+    // container "registry.gitlab.com/milothepsychic/rnaseq_pipeline/fastqc:0.11.9"
     
     publishDir "${params.qc}/${sample_id}", mode: "copy", pattern: "*.html", overwrite: false
     publishDir "${params.qc}/${sample_id}", mode: "copy", pattern: "*.zip", overwrite: false
@@ -127,7 +127,7 @@ process perfom_trimming {
        polyadenylated sequences and filter out ribosomal reads */
 
     tag "trim"
-    container "registry.gitlab.com/milothepsychic/rnaseq_pipeline/bbmap:38.86"
+    // container "registry.gitlab.com/milothepsychic/rnaseq_pipeline/bbmap:38.86"
 
     input:
         tuple val(sample_id), file(read1), file(read2) from raw_fastq_to_trim_ch
@@ -162,7 +162,7 @@ process perfom_trimming {
 
 process salmon_quant {
     tag "salmon quant"
-    container "docker://combinelab/salmon:1.3.0"
+    // container "combinelab/salmon:1.3.0"
 
     input:
         val sample_id from trimmed_sample_name_ch
@@ -193,7 +193,7 @@ process multiqc {
     /* collect all qc metrics into one report */
     
     tag "multiqc"
-    container "docker://ewels/multiqc:1.9"
+    // container "ewels/multiqc:1.9"
     
     publishDir path: "${params.qc}", mode: "copy", overwrite: true
     
@@ -224,7 +224,7 @@ process compress_salmon_results {
        can read gzipped files */
     
     tag "compress results"
-    container "registry.gitlab.com/milothepsychic/rnaseq_pipeline/pigz:2.4"
+    // container "docker://rtibiocloud/pigz:v2.4_b243f9"
 
     publishDir "${params.aligned}/${sample_id}", mode: "copy", pattern: "quant.sf.gz", overwrite: false
 
