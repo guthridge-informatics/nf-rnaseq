@@ -122,7 +122,7 @@ process initial_qc {
         """
 }
 
-process perfom_trimming {
+process bbmap_trim {
     /* Use BBmap to trim known adaptors, low quality reads, and
        polyadenylated sequences and filter out ribosomal reads */
 
