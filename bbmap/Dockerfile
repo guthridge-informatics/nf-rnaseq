@@ -1,16 +1,19 @@
-FROM gliderlabs/alpine:3.9
+FROM ubuntu:20.04
 
-RUN apk --no-cache --update-cache -U add tzdata && \
-    cp /usr/share/zoneinfo/America/Chicago /etc/localtime && \
-    apk --no-cache --update-cache add \
-        bash \
-        curl \
-        openjdk8 && \
-     rm -rf /var/cache/apk/*
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update --fix-missing && \
+   apt install --no-install-recommends -y \
+      curl \
+      openjdk-11-jdk \
+      openjdk-11-jre \
+      perl && \
+   apt-get clean && \
+   rm -rf /tmp/downloaded_packages/* && \
+   rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt
 
-RUN curl -L https://downloads.sourceforge.net/project/bbmap/BBMap_38.72.tar.gz -o BBMap.tar.gz && \
+RUN curl -L https://downloads.sourceforge.net/project/bbmap/BBMap_38.96.tar.gz -o BBMap.tar.gz && \
     tar xzf BBMap.tar.gz && \
     mv bbmap /usr/local && \
     rm -rf BBMap.tar.gz
