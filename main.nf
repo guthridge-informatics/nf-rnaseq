@@ -156,7 +156,10 @@ process perfom_trimming {
         mink=5 \
         qtrim=r \
         trimq=10 \
-        minlength=20
+        minlength=20 \
+        threads=4 \
+        prealloc=t \
+        Xmx=${params.bbmap_xmx}
     """
 }
 
