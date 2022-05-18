@@ -81,27 +81,10 @@ Channel
     .fromFilePairs( params.reads, checkIfExists: true, flat: true )
     .set{ raw_fastq_to_trim_ch }
 
-Channel
-    .fromPath( params.polyA, checkIfExists: true)
-    .set{ polyA_ref }
-
-Channel
-    .fromPath( params.truseq_adapter, checkIfExists: true)
-    .set{ truseq_adapter_ref }
-
-Channel
-    .fromPath( params.truseq_rna_adapter, checkIfExists: true)
-    .set{ truseq_rna_adapter_ref }
-
-Channel
-    .fromPath( params.rRNAs, checkIfExists: true)
-    .set{ rRNA_ref }
-
 process initial_qc {
     //Use Fastqc to examine fastq quality
 
     tag "FastQC"
-    // container "registry.gitlab.com/milothepsychic/rnaseq_pipeline/fastqc:0.11.9"
     
     publishDir "${params.qc}/${sample_id}", mode: "copy", pattern: "*.html", overwrite: false
     publishDir "${params.qc}/${sample_id}", mode: "copy", pattern: "*.zip", overwrite: false
@@ -110,7 +93,8 @@ process initial_qc {
         tuple val(sample_id), file(read1), file(read2) from raw_fastq_fastqc_reads_ch
 
     output:
-         file "*.html" into fastqc_results_ch
+        file "*.html" into fastqc_results_ch
+        // tuple val(sample_id), file(read1), file(read2) into raw_fastq_to_trim_ch
 
     script:
         """
@@ -131,6 +115,10 @@ process perfom_trimming {
 
     input:
         tuple val(sample_id), file(read1), file(read2) from raw_fastq_to_trim_ch
+        path polyA from params.polyA
+        path truseq_adapter from params.truseq_adapter
+        path truseq_rna_adapter from params.truseq_rna_adapter
+        path rRNAs from params.rRNAs
 
     output:
         file "*.trimmed.R1.fq.gz" into trimmed_read1_ch
@@ -147,7 +135,7 @@ process perfom_trimming {
         out2=${sample_id}.trimmed.R2.fq.gz \
         outm=removed_${sample_id}.R1.fq.gz \
         outm2=removed_${sample_id}.R2.fq.gz \
-        ref=${params.polyA},${params.truseq_adapter},${params.truseq_rna_adapter},${params.rRNAs} \
+        ref=${polyA},${truseq_adapter},${truseq_rna_adapter},${rRNAs} \
         stats=contam_${sample_id}.csv \
         statscolumns=3 \
         k=13 \
@@ -158,8 +146,7 @@ process perfom_trimming {
         trimq=10 \
         minlength=20 \
         threads=4 \
-        prealloc=t \
-        Xmx=${params.bbmap_xmx}
+        prealloc=t
     """
 }
 
@@ -178,6 +165,7 @@ process salmon_quant {
         val sample_id from trimmed_sample_name_ch
         file trimmed_read1 from trimmed_read1_ch
         file trimmed_read2 from trimmed_read2_ch
+        path salmon_index from params.salmon_index
 
     output:
         file "${sample_id}/quant.sf" into pseudoquant_ch, pseudoquant_to_compress_ch
@@ -189,7 +177,7 @@ process salmon_quant {
     salmon quant \
         --libType A \
         --threads ${task.cpus} \
-        --index ${params.salmon_index} \
+        --index ${salmon_index} \
         --seqBias \
         --gcBias \
         --dumpEq \
