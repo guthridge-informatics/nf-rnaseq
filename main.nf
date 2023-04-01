@@ -98,7 +98,7 @@ process initial_qc {
 
     script:
         """
-        fastqc \
+        falco \
             --noextract \
             --format fastq \
             --threads ${task.cpus} \
@@ -129,6 +129,7 @@ process perfom_trimming {
     script:
     """
     bbduk.sh \
+        -Xmx24G \
         in=${read1} \
         in2=${read2} \
         outu=${sample_id}.trimmed.R1.fq.gz \
@@ -150,41 +151,38 @@ process perfom_trimming {
     """
 }
 
-process salmon_quant {
-    tag "salmon quant"
+process star_align {
+    tag "star align"
     maxErrors 10
     errorStrategy "ignore"
     // container "combinelab/salmon:1.3.0"
-    publishDir path: "${params.aligned}", mode: "copy", overwrite: true
-    publishDir path: "${params.aligned}/${sample_id}", mode: "copy", pattern: "*.json", overwrite: true
-    publishDir path: "${params.aligned}/${sample_id}", mode: "copy", pattern: "*.tsv", overwrite: true
-    publishDir path: "${params.aligned}/${sample_id}", mode: "copy", pattern: "*.gz", overwrite: true
-    publishDir path: "${params.aligned}/${sample_id}", mode: "copy", pattern: "*.txt", overwrite: true
+    publishDir path: "${params.aligned}/${sample_id}", mode: "copy", pattern: "*.bam", overwrite: true
+    publishDir path: "${params.aligned}/${sample_id}", mode: "copy", pattern: "*.tab", overwrite: true
 
     input:
         val sample_id from trimmed_sample_name_ch
         file trimmed_read1 from trimmed_read1_ch
         file trimmed_read2 from trimmed_read2_ch
-        path salmon_index from params.salmon_index
+        path star_index from params.star_index
 
     output:
-        file "${sample_id}/quant.sf" into pseudoquant_ch, pseudoquant_to_compress_ch
-        file "${sample_id}/logs/salmon_quant.log" into pseudoquant_log_ch
-        val sample_id into pseudoquant_name, pseudoquant_name2
+        file "*.bam" into aligned_ch
+        file "*.tab" into counts_ch
+        val sample_id into quant_name
 
     script:
     """
-    salmon quant \
-        --libType A \
-        --threads ${task.cpus} \
-        --index ${salmon_index} \
-        --seqBias \
-        --gcBias \
-        --dumpEq \
-        --validateMappings \
-        --mates1 ${trimmed_read1} \
-        --mates2 ${trimmed_read2} \
-        --output ${sample_id} \
+    star \
+        --quantMode TranscriptomeSAM GeneCounts \
+        --runThreadN {task.cpus} \
+        --genomeDir {input.star_index} \
+        --readFilesIn {input.trimmed_read1} {input.trimmed_read2} \
+        --readFilesCommand zcat \
+        --outFileNamePrefix {input.sample_id} \
+        --outReadsUnmapped Fastx \
+        --outBAMcompression -1 \
+        --outSAMtype BAM SortedByCoordinate \
+        --outSAMattributes All
     """
 }
 
@@ -195,11 +193,11 @@ process multiqc {
     // container "ewels/multiqc:1.9"
     
     input:
-        val sample_id from pseudoquant_name2
-        file ("${sample_id}/quant.sf") from pseudoquant_ch.collect().ifEmpty([])
+        val sample_id from quant_name
+        file ("${sample_id}/*.bam") from aligned_ch.collect().ifEmpty([])
         file ("${sample_id}/*_fastqc.html") from fastqc_results_ch.collect().ifEmpty([])
         file ("${sample_id}/contam.csv") from contamination_ch.collect().ifEmpty([])
-        file ("${sample_id}/salmon.log") from pseudoquant_log_ch.collect().ifEmpty([])
+        file ("${sample_id}/*.tab") from counts_ch.collect().ifEmpty([])
     
     output:
         file "*.html" into multiqc_ch
@@ -216,27 +214,6 @@ process multiqc {
     """
 }
 
-process compress_salmon_results {
-    /* No reason not to compress these results since tximport
-       can read gzipped files */
-    
-    tag "compress results"
-    // container "docker://rtibiocloud/pigz:v2.4_b243f9"
-
-    publishDir "${params.aligned}/${sample_id}", mode: "copy", pattern: "quant.sf.gz", overwrite: false
-
-    input:
-        file quant from pseudoquant_to_compress_ch
-        val sample_id from pseudoquant_name
-
-    output:
-        file("quant.sf.gz")
-
-    script:
-    """
-    pigz -v -f -p ${task.cpus} ${quant}
-    """
-}
 
 def nfcoreHeader() {
     // Log colors ANSI codes
