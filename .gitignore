@@ -4,3 +4,4 @@
 .idea*
 work/
 *.log
+**/*.fastq.gz
