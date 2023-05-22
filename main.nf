@@ -23,11 +23,13 @@ multiqc_config =
 
 if (params.chm13t2t) {
     println("using t2t")
-    reference_sequences = "${params.genomic}/homo_sapiens/sequences/chm13T2Tv2.0"
-    gtf                 = "${reference_sequences}/GCF_009914755.1_T2T-CHM13v2.0_genomic.gtf"
+    reference_sequences = "${params.genomic}/homo_sapiens/sequences/chm13T2T/GCF_009914755.1"
+    gtf                 = "${reference_sequences}/genomic.gff"
     fasta               = "${reference_sequences}/GCF_009914755.1_T2T-CHM13v2.0_genomic.fna"
-    star_index          = "${params.genomic}/homo_sapiens/indices/star/chm13T2Tv2.0_star_2.7.10b"
-    salmon_index        = "${params.genomic}/homo_sapiens/indices/salmon/chm13T2Tv2.0_star_2.7.10b"
+    star_index          = "${params.genomic}/homo_sapiens/indices/star/chm13T2T_ncbi_star_2.7.10"
+    // salmon_index        = "${params.genomic}/homo_sapiens/indices/salmon/chm13T2Tv2.0_star_2.7.10b"
+    salmon_index        = ""
+    transcriptome       = "${reference_sequences}/rna.fna"
     gtf_ch =
         Channel
             .fromPath( gtf, checkIfExists: true)
@@ -35,6 +37,10 @@ if (params.chm13t2t) {
     fasta_ch =
         Channel
             .fromPath( fasta, checkIfExists: true)
+            .collect()
+    transcriptome_ch =
+        Channel
+            .fromPath( transcriptome, checkIfExists: true)
             .collect()
 } else {
     println("using old refs")
@@ -45,6 +51,10 @@ if (params.chm13t2t) {
     fasta_ch =
         Channel
             .fromPath( params.fasta, checkIfExists: true)
+            .collect()
+    fasta_ch =
+        Channel
+            .fromPath( params.transcriptome, checkIfExists: true)
             .collect()
     star_index = params.star_index
     salmon_index = params.salmon_index
