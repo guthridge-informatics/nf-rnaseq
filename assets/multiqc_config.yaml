@@ -1,0 +1,13 @@
+run_modules:
+  - fastqc
+  - star
+  - salmon
+  - bbduk
+
+sp:
+  fastqc/zip:
+    fn: "*_fastqc.zip"
+  bbduk:
+    fn: "*.bbduk.log"
+  salmon/meta:
+    fn: "*_meta_info.json"
