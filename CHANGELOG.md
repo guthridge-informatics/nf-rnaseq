@@ -1,4 +1,9 @@
 # Changelog
+## [2.0.0] - 2023-05-22
+
+- Complete overhaul.  Now uses DSL2 and nf-core modules.
+- No more conda, now just containers.
+- Google Batch is working
 
 ## [1.1.1] - 2022-04-04
 
