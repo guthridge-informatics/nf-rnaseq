@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.1.0] - 2023-07-11
+## [2.2.0] - 2023-07-11
 
 ### Fixed
 
@@ -9,6 +9,22 @@
 ### Changed
 
 - Adjusted cpu and memory requirements for tasks based on actual usage
+
+=======
+** [2.1.0] - 2023-05-23
+
+*** Fixed
+
+- Output files are saved where they should be (i.e. run on a bucket, save to the bucket)
+
+*** Added
+
+- Started skeleton to allow for different aligners
+- Print log info at beginning to display some important fully resolved parameters
+
+*** changed
+
+- On Google Batch, use spot instances by default
 
 
 ## [2.0.0] - 2023-05-22

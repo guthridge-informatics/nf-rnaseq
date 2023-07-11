@@ -23,8 +23,7 @@ multiqc_config =
     Channel
         .fromPath( "${params.multiqc_config}", checkIfExists: true)
 
-if (params.chm13t2t) {
-    println("using t2t")
+if ( params.genome_ver == "chm13T2T" ) {
     reference_sequences = "${params.genomic}/homo_sapiens/sequences/chm13T2T/GCF_009914755.1"
     gtf                 = "${reference_sequences}/genomic.gff"
     fasta               = "${reference_sequences}/GCF_009914755.1_T2T-CHM13v2.0_genomic.fna"
@@ -44,8 +43,7 @@ if (params.chm13t2t) {
         Channel
             .fromPath( transcriptome, checkIfExists: true)
             .collect()
-} else {
-    println("using old refs")
+} else if ( params.genome_ver == "GENCODE" ) {
     gtf_ch =
         Channel
             .value( 
@@ -95,41 +93,70 @@ contaminants_ch =
     Channel
         .fromPath( params.contaminants )
         .collect()
-params.result = "${params.project}/results"
+
+log.info """\
+ NF-RNASEQ Pipeline
+ ===================================
+ project                  : ${params.project}
+ genome version           : ${params.genome_ver}
+ reads                    : ${params.raw_fastqs}
+
+ logs output directory    : ${params.logs}
+ results output directory : ${params.results}
+ """
+
 workflow {
     FASTQC(raw_fastq_ch)
     BBMAP_BBDUK(
         raw_fastq_ch,
         contaminants_ch
     )
-    // STAR_ALIGN(
-    //     BBMAP_BBDUK.out.reads,
-    //     index_ch,
-    //     gtf_ch,
-    //     false,
-    //     "",
-    //     ""
-    // )
-    SALMON_QUANT(
-        // STAR_ALIGN.out.bam_transcript,
-        BBMAP_BBDUK.out.reads,
-        index_ch,
-        gtf_ch,
-        transcriptome_ch,
-        params.salmon_alignment_mode,
-        params.salmon_libtype
-    )
+
+    ch_quant_output_ch = Channel.empty()
+    ch_quant_log_info  = Channel.empty()
+
+    if (params.aligner == "star"){
+        STAR_ALIGN(
+            BBMAP_BBDUK.out.reads,
+            index_ch,
+            gtf_ch,
+            false,
+            "",
+            ""
+        )
+        SALMON_QUANT(
+            STAR_ALIGN.out.bam_transcript,
+            index_ch,
+            gtf_ch,
+            transcriptome_ch,
+            params.salmon_alignment_mode,
+            params.salmon_libtype
+        )
+        
+        ch_quant_output_ch = SALMON_QUANT.out.results
+        ch_quant_log_info  = SALMON_QUANT.out.json_info.collect{it[1]}
+
+    } else if (params.aligner == "salmon"){
+        SALMON_QUANT(
+            // STAR_ALIGN.out.bam_transcript,
+            BBMAP_BBDUK.out.reads,
+            index_ch,
+            gtf_ch,
+            transcriptome_ch,
+            params.salmon_alignment_mode,
+            params.salmon_libtype
+        )
+
+        ch_quant_output_ch = SALMON_QUANT.out.results
+        ch_quant_log_info  = SALMON_QUANT.out.json_info.collect{it[1]}
+    }
     MULTIQC(
         FASTQC.out.zip.collect{it[1]}
-            // .mix(STAR_ALIGN.out.log_final.collect{it[1]})
             .mix( BBMAP_BBDUK.out.log.collect{it[1]} )
-            .mix( SALMON_QUANT.out.json_info.collect{it[1]} )
+            .mix( ch_quant_log_info.ifEmpty([]) )
             .collect(),
         multiqc_config.collect().ifEmpty([]),
         [],
         []
         )
-    MULTIQC.out.report.collectFile(name: "results/multiqc_report.html" )
-    // STAR_ALIGN.out.bam_sorted.collectFile() { meta, file-> "./${meta.id}/" + file}
-    SALMON_QUANT.out.results.collectFile()  { meta, file-> "${params.quant}/${meta.id}/" + file}
 }
