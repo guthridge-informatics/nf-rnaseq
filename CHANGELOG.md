@@ -1,4 +1,16 @@
 # Changelog
+
+## [2.1.0] - 2023-07-11
+
+### Fixed
+
+- Multiqc now correctly picks up all of the salmon qc files
+
+### Changed
+
+- Adjusted cpu and memory requirements for tasks based on actual usage
+
+
 ## [2.0.0] - 2023-05-22
 
 - Complete overhaul.  Now uses DSL2 and nf-core modules.
@@ -34,6 +46,9 @@
 ### Changed
 - Updated README.md to include "Usage" section
 
+
+[2.1.0]: https://github.com/olivierlacan/keep-a-changelog/releases/tag/2.0.0...2.1.0
+[2.0.0]: https://github.com/olivierlacan/keep-a-changelog/releases/tag/1.1.1...2.0.0
 [1.1.1]: https://github.com/olivierlacan/keep-a-changelog/releases/tag/1.1.0...1.1.1
 [1.1.0]: https://github.com/olivierlacan/keep-a-changelog/releases/tag/1.0.2...1.1.0
 [1.0.2]: https://github.com/olivierlacan/keep-a-changelog/releases/tag/1.0.1...1.0.2
