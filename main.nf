@@ -12,7 +12,7 @@ include { MULTIQC } from './modules/nf-core/multiqc/main'
 
 // }
 
-params.input = "${params.raw_fastqs}/*_S*_L00*_R{1,2}_00*.fastq.gz"
+params.input = "${params.raw_fastqs}/**/*_S*_R{1,2}_00*.fastq.gz"
 
 raw_fastq_ch = 
     Channel
