@@ -1,20 +1,28 @@
 nextflow.enable.dsl = 2
 
-include { FASTQC } from './modules/nf-core/fastqc/main'
-include { BBMAP_BBDUK } from './modules/nf-core/bbmap/bbduk/main'
-include { STAR_ALIGN } from './modules/nf-core/star/align/main'
+include { BCLCONVERT }          from '../modules/nf-core/bclconvert/main'
+include { FASTQC }              from './modules/nf-core/fastqc/main'
+include { BBMAP_BBDUK }         from './modules/nf-core/bbmap/bbduk/main'
+include { STAR_ALIGN }          from './modules/nf-core/star/align/main'
 include { STAR_GENOMEGENERATE } from './modules/nf-core/star/genomegenerate/main'
-include { SALMON_INDEX } from './modules/nf-core/salmon/index/main'
-include { SALMON_QUANT } from './modules/nf-core/salmon/quant/main'
-include { MULTIQC } from './modules/nf-core/multiqc/main'
+include { SALMON_INDEX }        from './modules/nf-core/salmon/index/main'
+include { SALMON_QUANT }        from './modules/nf-core/salmon/quant/main'
+include { MULTIQC }             from './modules/nf-core/multiqc/main'
 
 // def updateParams(){
 
 // }
+// params.input = "${params.raw_fastqs}/**/*_S*_R{1,2}_00*.fastq.gz"
 
-params.input = "${params.raw_fastqs}/**/*_S*_R{1,2}_00*.fastq.gz"
+samplesheet_ch =
+    Channel
+        .fromPath( "${params.samplesheet}", checkIfExists: true)
 
-raw_fastq_ch = 
+bcl_ch = 
+    Channel
+        .fromPath( "${params.bcls}", checkIfExists: true)
+
+raw_fastq_ch =
     Channel
         .fromFilePairs( params.input, checkIfExists: true, )
         .map{ meta, files -> [['id': meta, ], files]}
@@ -99,14 +107,24 @@ log.info """\
  ===================================
  project                  : ${params.project}
  genome version           : ${params.genome_ver}
- reads                    : ${params.raw_fastqs}
 
  logs output directory    : ${params.logs}
  results output directory : ${params.results}
  """
 
 workflow {
-    FASTQC(raw_fastq_ch)
+    BCLCONVERT(
+        samplesheet_ch,
+        bcl_ch
+    )
+    
+    read_pairs = 
+        Channel
+           .subscribe(BCLCONVERT.out.fastq)
+           .map { [it.simpleName.split(/_R[12]_/)?.find(), it] }
+           .groupTuple(size: 2)
+
+    FASTQC(BCLCONVERT)
     BBMAP_BBDUK(
         raw_fastq_ch,
         contaminants_ch

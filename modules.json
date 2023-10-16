@@ -10,6 +10,11 @@
             "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
             "installed_by": ["modules"]
           },
+          "bclconvert": {
+            "branch": "master",
+            "git_sha": "23ca653e098ef2869598f355a6d15cd7e4807b95",
+            "installed_by": ["modules"]
+          },
           "fastqc": {
             "branch": "master",
             "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
