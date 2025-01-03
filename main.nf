@@ -1,6 +1,6 @@
 nextflow.enable.dsl = 2
 
-include { BCLCONVERT }          from '../modules/nf-core/bclconvert/main'
+include { BCLCONVERT }          from './modules/nf-core/bclconvert/main'
 include { FASTQC }              from './modules/nf-core/fastqc/main'
 include { BBMAP_BBDUK }         from './modules/nf-core/bbmap/bbduk/main'
 include { STAR_ALIGN }          from './modules/nf-core/star/align/main'
@@ -22,10 +22,10 @@ bcl_ch =
     Channel
         .fromPath( "${params.bcls}", checkIfExists: true)
 
-raw_fastq_ch =
-    Channel
-        .fromFilePairs( params.input, checkIfExists: true, )
-        .map{ meta, files -> [['id': meta, ], files]}
+// raw_fastq_ch =
+//     Channel
+//         .fromFilePairs( params.input, checkIfExists: true, )
+//         .map{ meta, files -> [['id': meta, ], files]}
 
 multiqc_config = 
     Channel
