@@ -11,8 +11,9 @@ with the correct permissions.  Good luck finding those permissions! Just kidding
 
 ## First, set the project
 
+```
 gcloud config set project ${PROJECT_ID}
-
+```
 
 ## Enable APIs
 
@@ -27,7 +28,7 @@ gcloud services enable \
 
 ## Create the service account
 
-I am going to call the account `nf-runner`, but there is no name requirements.
+I am going to call the account `nf-runner`, but there is not a name requirement.
 
 ```
 gcloud iam service-accounts create nf-runner \
@@ -105,9 +106,16 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 
 ## Copy the credentials to run the agent locally
 
-On the [Service accounts](https://console.cloud.google.com/iam-admin/serviceaccounts) page, click on the three 
-vertical dots for the `nf-runner` account, and select `keys`. Then `ADD KEY` and `Create new key`. Select `JSON` and 
-save to a location accessible to Nextflow.
+On the [Service accounts](https://console.cloud.google.com/iam-admin/serviceaccounts) page, 
+*click on the three 
+vertical dots for the `nf-runner` account
+
+Select:
+* `keys`
+* `ADD KEY`
+* `Create new key`
+* `JSON`
+* save to a location accessible to Nextflow.
 
 Export the location of that file as an environmental variable:
 ```
