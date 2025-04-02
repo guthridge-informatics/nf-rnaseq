@@ -13,6 +13,25 @@ and pseudoalignment and quantification with [Salmon](https://combine-lab.github.
 
 This pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/master/LICENSE).
 
+# Usage
+
+An example of use:
+```
+nextflow main.nf \
+    -profile slurm \
+    -config rnaseq.config \
+    -resume \
+    --reads_pattern "*_S*_R{1,2}_00*.fastq.gz" \
+    --project /scratch \
+    --raw_fastqs /datasets/rnaseq/data/raw_data/fastqs/ \
+    --refs /scratch/references/ \
+    --species chimeras \
+    --pseudoalign \
+    --results /scratch/data
+```
+
+Currently, profiles are provided for running the pipeline using a SLURM-based job manager and Google Batch Runner (which can be found in the `conf` folder); you will probably need to create one for your own particular compute resources.
+
 > The nf-core framework for community-curated bioinformatics pipelines.
 >
 > Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.
