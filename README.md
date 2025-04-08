@@ -17,7 +17,7 @@ This pipeline uses code and infrastructure developed and maintained by the [nf-c
 
 An example of use:
 ```
-nextflow main.nf \
+nextflow run main.nf \
     -profile slurm \
     -config rnaseq.config \
     -resume \
