@@ -1,3 +1,4 @@
+#!/usr/bin/env nextflow
 nextflow.enable.dsl = 2
 
 include { FASTQC } from './modules/nf-core/fastqc/main'
@@ -14,98 +15,92 @@ include { MULTIQC } from './modules/nf-core/multiqc/main'
 
 params.input = "${params.raw_fastqs}/${params.reads_pattern}"
 
-raw_fastq_ch = 
-    Channel
+
+workflow {
+    log.info """\
+    NF-RNASEQ Pipeline
+    ===================================
+    project                  : ${params.project}
+    genome version           : ${params.genome_ver}
+    reads                    : ${params.raw_fastqs}
+
+    logs output directory    : ${params.logs}
+    results output directory : ${params.results}
+    """
+
+    def raw_fastq_ch = Channel
         .fromFilePairs( params.input, checkIfExists: true, )
         .map{ meta, files -> [['id': meta, ], files]}
-
-multiqc_config = 
-    Channel
+    def multiqc_config = Channel
         .fromPath( "${params.multiqc_config}", checkIfExists: true)
 
-if ( params.genome_ver == "chm13T2T" ) {
-    reference_sequences = "${params.genomic}/homo_sapiens/sequences/chm13T2T/GCF_009914755.1"
-    gtf                 = "${reference_sequences}/genomic.gff"
-    fasta               = "${reference_sequences}/GCF_009914755.1_T2T-CHM13v2.0_genomic.fna"
-    star_index          = "${params.genomic}/homo_sapiens/indices/star/chm13T2T_ncbi_star_2.7.10"
-    // salmon_index        = "${params.genomic}/homo_sapiens/indices/salmon/chm13T2Tv2.0_star_2.7.10b"
-    salmon_index        = ""
-    transcriptome       = "${reference_sequences}/rna.fna"
-    gtf_ch =
-        Channel
+    if ( params.genome_ver == "chm13T2T" ) {
+        reference_sequences = "${params.genomic}/homo_sapiens/sequences/chm13T2T/GCF_009914755.1"
+        gtf                 = "${reference_sequences}/genomic.gff"
+        fasta               = "${reference_sequences}/GCF_009914755.1_T2T-CHM13v2.0_genomic.fna"
+        star_index          = "${params.genomic}/homo_sapiens/indices/star/chm13T2T_ncbi_star_2.7.10"
+        // salmon_index        = "${params.genomic}/homo_sapiens/indices/salmon/chm13T2Tv2.0_star_2.7.10b"
+        salmon_index        = ""
+        transcriptome       = "${reference_sequences}/rna.fna"
+        gtf_ch =Channel
             .fromPath( gtf, checkIfExists: true)
             .collect()
-    fasta_ch =
-        Channel
+        fasta_ch = Channel
             .fromPath( fasta, checkIfExists: true)
             .collect()
-    transcriptome_ch =
-        Channel
+        transcriptome_ch = Channel
             .fromPath( transcriptome, checkIfExists: true)
             .collect()
-} else if ( params.genome_ver == "GENCODE" ) {
-    gtf_ch =
-        Channel
+    } else if ( params.genome_ver == "GENCODE" ) {
+        gtf_ch = Channel
             .value( 
                 file( params.gtf, checkIfExists: true ) 
             )
-    fasta_ch =
-        Channel
-            .value(
-                file( params.fasta, checkIfExists: true )
-            )
-    transcriptome_ch =
-        Channel
-            .value(
-                file(params.transcriptome, checkIfExists: true)
-            )
-    star_index = params.star_index
-    salmon_index = params.salmon_index
-}
-if (params.pseudoalign){
-    if ( params.build_index ){
-        index_ch = SALMON_INDEX(
-            fasta_ch,
-            gtf_ch
-        ).out.index
-    } else {
-        index_ch =
-            Channel
-                .value( 
-                    file(salmon_index, checkIfExists: true ) 
-                )
-    }
-} else {
-    if ( !file( star_index, checkIfExists: true ) | params.build_index ){
-        index_ch = STAR_GENOMEGENERATE(
-            fasta_ch,
-            gtf_ch
-        ).out.index
-    } else {
-        index_ch =
+        fasta_ch =
             Channel
                 .value(
-                    file( star_index, checkIfExists: true )
+                    file( params.fasta, checkIfExists: true )
                 )
+        transcriptome_ch =
+            Channel
+                .value(
+                    file(params.transcriptome, checkIfExists: true)
+                )
+        star_index = params.star_index
+        salmon_index = params.salmon_index
     }
-}
-contaminants_ch =
-    Channel
-        .fromPath( params.contaminants )
-        .collect()
+    if (params.pseudoalign){
+        if ( params.build_index ){
+            index_ch = SALMON_INDEX(
+                fasta_ch,
+                gtf_ch
+            ).out.index
+        } else {
+            index_ch =
+                Channel
+                    .value( 
+                        file(salmon_index, checkIfExists: true ) 
+                    )
+        }
+    } else {
+        if ( !file( star_index, checkIfExists: true ) | params.build_index ){
+            index_ch = STAR_GENOMEGENERATE(
+                fasta_ch,
+                gtf_ch
+            ).out.index
+        } else {
+            index_ch =
+                Channel
+                    .value(
+                        file( star_index, checkIfExists: true )
+                    )
+        }
+    }
+    contaminants_ch =
+        Channel
+            .fromPath( params.contaminants )
+            .collect()
 
-log.info """\
- NF-RNASEQ Pipeline
- ===================================
- project                  : ${params.project}
- genome version           : ${params.genome_ver}
- reads                    : ${params.raw_fastqs}
-
- logs output directory    : ${params.logs}
- results output directory : ${params.results}
- """
-
-workflow {
     FASTQC(raw_fastq_ch)
     BBMAP_BBDUK(
         raw_fastq_ch,
