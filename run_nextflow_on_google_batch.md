@@ -1,7 +1,7 @@
 # ! Note: this was written on 2025/01/03
 
 I am writing this because my previous setup *stopped working* thanks to Google changing things.
-Who knows if this will work when you want it too.
+Who knows if this will work when you want it to.
 
 # Running the pipeline
 To run the pipleline on Google Cloud, use [Google Batch](https://cloud.google.com/batch/docs/get-started)
